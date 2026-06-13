@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUAPS Annual Conference 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --obs:#07090F;--navy:#0C1020;--indigo:#141A30;--card:#18202E;
+  --gold:#D4952A;--gold2:#F0B84A;--gold3:#FFD070;
+  --parch:#EAE6DC;--silver:#8892A4;--mist:#C4CBD8;
+  --border:rgba(212,149,42,0.22);--bordh:rgba(212,149,42,0.7);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--obs);font-family:'Inter',sans-serif;color:var(--parch);}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* ══════════════════════════════════════
+   ENTRANCE
+══════════════════════════════════════ */
+#screen-entrance{
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%, #1a1608 0%, var(--obs) 70%);
+  cursor:pointer;z-index:100;
+  transition:opacity 0.8s ease;
+}
+#screen-entrance.fading{opacity:0;pointer-events:none;}
+
+.star-field{position:absolute;inset:0;overflow:hidden;}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);}
+@keyframes twinkle{0%,100%{opacity:var(--max,0.8);}50%{opacity:0.1;}}
+
+.entrance-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.1rem;text-align:center;padding:2rem;animation:rise 1.4s cubic-bezier(.22,1,.36,1) both;}
+@keyframes rise{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+.logo-svg{width:170px;height:170px;}
+.ray-group{animation:spin-rays 80s linear infinite;transform-origin:85px 85px;}
+.void-core{animation:counter-spin 80s linear infinite;transform-origin:85px 85px;}
+@keyframes spin-rays{to{transform:rotate(360deg);}}
+@keyframes counter-spin{to{transform:rotate(-360deg);}}
+.ray-pulse{animation:rpulse 3s ease-in-out infinite alternate;}
+@keyframes rpulse{from{opacity:0.65;}to{opacity:1;}}
+
+.ent-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);font-weight:500;}
+.ent-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--parch);line-height:1.05;}
+.ent-theme{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;font-weight:300;color:var(--gold2);}
+.ent-date{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--silver);}
+
+.enter-btn{
+  margin-top:.4rem;
+  background:transparent;border:1px solid var(--gold);
+  color:var(--gold2);font-family:'Inter',sans-serif;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  padding:13px 42px;border-radius:2px;cursor:pointer;
+  transition:all .35s;position:relative;overflow:hidden;
+}
+.enter-btn::after{content:'';position:absolute;inset:0;background:rgba(212,149,42,0.08);opacity:0;transition:opacity .3s;}
+.enter-btn:hover{letter-spacing:.3em;color:var(--gold3);border-color:var(--gold3);}
+.enter-btn:hover::after{opacity:1;}
+.ent-hint{font-size:10px;color:rgba(136,146,164,.4);letter-spacing:.05em;}
+
+/* ══════════════════════════════════════
+   HUD BAR
+══════════════════════════════════════ */
+#hud{
+  position:fixed;top:0;left:0;right:0;height:52px;z-index:80;
+  background:rgba(7,9,15,.9);border-bottom:.5px solid var(--border);
+  backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:space-between;padding:0 1.5rem;
+}
+#hud.show{display:flex;}
+.hud-brand{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.hud-brand-text{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mist);}
+.hud-room{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--parch);}
+.hud-right{display:flex;align-items:center;gap:8px;}
+.live-pill{display:flex;align-items:center;gap:5px;background:rgba(200,50,50,.12);border:.5px solid rgba(200,50,50,.4);color:#F08080;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:2px;}
+.live-dot{width:5px;height:5px;background:#F08080;border-radius:50%;animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.hud-btn{background:var(--gold);color:var(--obs);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:2px;border:none;cursor:pointer;transition:background .2s;}
+.hud-btn:hover{background:var(--gold3);}
+
+/* ══════════════════════════════════════
+   FOYER — CSS 3D PERSPECTIVE CORRIDOR
+══════════════════════════════════════ */
+#screen-foyer{background:var(--obs);}
+
+.foyer-scene{
+  flex:1;perspective:900px;perspective-origin:50% 45%;
+  position:relative;overflow:hidden;
+  margin-top:52px;
+}
+
+.corridor{
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  position:relative;
+}
+
+/* Floor */
+.floor{
+  position:absolute;
+  width:800px;height:1600px;
+  left:50%;top:100%;
+  transform:translateX(-50%) rotateX(90deg);
+  transform-origin:top center;
+  background:
+    linear-gradient(rgba(212,149,42,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,149,42,.07) 1px, transparent 1px),
+    #0D1122;
+  background-size:80px 80px;
+}
+
+/* Ceiling */
+.ceiling{
+  position:absolute;
+  width:800px;height:1600px;
+  left:50%;bottom:100%;
+  transform:translateX(-50%) rotateX(-90deg) translateY(400px);
+  transform-origin:bottom center;
+  background:#08090E;
+}
+
+/* Left wall */
+.wall-left{
+  position:absolute;
+  width:1600px;height:600px;
+  right:50%;top:50%;
+  transform:translateY(-50%) rotateY(90deg);
+  transform-origin:right center;
+  background:linear-gradient(90deg, #141A30, #0E1428);
+  border-right:1px solid rgba(212,149,42,.12);
+}
+
+/* Right wall */
+.wall-right{
+  position:absolute;
+  width:1600px;height:600px;
+  left:50%;top:50%;
+  transform:translateY(-50%) rotateY(-90deg);
+  transform-origin:left center;
+  background:linear-gradient(-90deg, #141A30, #0E1428);
+  border-left:1px solid rgba(212,149,42,.12);
+}
+
+/* Back wall */
+.wall-back{
+  position:absolute;
+  width:600px;height:600px;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%) translateZ(-600px);
+  background:#080B16;
+  border:.5px solid rgba(212,149,42,.08);
+}
+
+/* Ceiling light strips */
+.ceil-strip{
+  position:absolute;
+  width:6px;height:1200px;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%) translateZ(var(--cz,0px)) rotateX(90deg) translateY(-10px);
+  background:linear-gradient(transparent, rgba(212,149,42,.6), transparent);
+}
+
+/* Conference banner at back */
+.foyer-banner{
+  position:absolute;
+  width:360px;
+  left:50%;top:50%;
+  transform:translate(-50%,-55%) translateZ(-400px);
+  text-align:center;
+  pointer-events:none;
+}
+.foyer-banner-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--parch);line-height:1.1;margin-bottom:.3rem;}
+.foyer-banner-theme{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--gold2);}
+.foyer-banner-rule{width:120px;height:.5px;background:var(--gold);margin:.6rem auto;}
+
+/* DOOR PORTALS in 3D space */
+.door-portal{
+  position:absolute;
+  left:50%;top:50%;
+  transform-style:preserve-3d;
+  cursor:pointer;
+}
+.door-portal:hover .door-frame{border-color:var(--gold);}
+.door-portal:hover .door-fill{background:rgba(212,149,42,.06);}
+.door-portal:hover .door-label-wrap{opacity:1;}
+
+.door-frame{
+  width:120px;height:190px;
+  border:1px solid rgba(212,149,42,.35);
+  border-radius:2px;
+  position:relative;
+  background:rgba(10,14,28,.7);
+  transition:border-color .3s, background .3s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  backdrop-filter:blur(4px);
+}
+.door-fill{
+  position:absolute;inset:0;
+  background:transparent;
+  transition:background .3s;
+  border-radius:2px;
+}
+.door-icon-3d{font-size:22px;color:var(--gold);position:relative;z-index:1;}
+.door-name{font-family:'Cormorant Garamond',serif;font-size:.85rem;color:var(--parch);text-align:center;line-height:1.2;position:relative;z-index:1;padding:0 8px;}
+.door-sub-text{font-size:9px;color:var(--silver);text-align:center;letter-spacing:.04em;position:relative;z-index:1;padding:0 6px;line-height:1.3;}
+.door-gold-top{position:absolute;top:-2px;left:-2px;right:-2px;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.door-gold-bottom{position:absolute;bottom:-2px;left:-2px;right:-2px;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.door-live-badge{position:absolute;top:6px;right:6px;background:rgba(74,222,128,.15);border:.5px solid rgba(74,222,128,.4);color:#4ade80;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 5px;border-radius:2px;}
+
+.door-label-wrap{
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  white-space:nowrap;opacity:0;transition:opacity .3s;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2);
+}
+
+/* Foyer nav overlay — always accessible */
+.foyer-nav-bar{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+  z-index:70;
+  max-width:90vw;
+}
+.fnav-btn{
+  background:rgba(7,9,15,.82);
+  border:.5px solid var(--border);
+  color:var(--gold2);
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  padding:7px 14px;border-radius:2px;cursor:pointer;
+  font-family:'Inter',sans-serif;
+  backdrop-filter:blur(6px);
+  transition:all .2s;
+}
+.fnav-btn:hover{border-color:var(--gold);color:var(--gold3);background:rgba(20,26,48,.9);}
+
+/* ══════════════════════════════════════
+   ROOM SCREENS (exhibit, hall, rooms, etc.)
+══════════════════════════════════════ */
+.room-screen{background:var(--obs);padding-top:52px;}
+
+.room-top-bar{
+  position:fixed;top:52px;left:0;right:0;
+  background:rgba(7,9,15,.9);border-bottom:.5px solid var(--border);
+  padding:.75rem 1.5rem;display:flex;align-items:center;gap:12px;z-index:70;
+  backdrop-filter:blur(8px);
+}
+.back-btn{background:transparent;border:.5px solid var(--border);color:var(--silver);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:2px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.room-title-bar{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--parch);}
+
+.room-content{
+  overflow-y:auto;height:calc(100vh - 104px);
+  padding:1.5rem;
+}
+
+/* ── EXHIBIT HALL ── */
+.exhibit-hall-3d{
+  perspective:600px;
+  height:280px;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:1rem;
+  background:linear-gradient(180deg,#08090F 0%,#0D1122 100%);
+  border:.5px solid var(--border);
+  border-radius:6px;
+}
+.exhibit-corridor{
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  position:relative;
+}
+.ex-floor-plane{
+  position:absolute;width:100%;height:600px;
+  bottom:-60px;left:0;
+  transform:rotateX(65deg);
+  transform-origin:bottom center;
+  background:
+    linear-gradient(rgba(212,149,42,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,149,42,.06) 1px,transparent 1px),
+    #0A0E1A;
+  background-size:60px 60px;
+}
+.ex-vp-glow{
+  position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);
+  width:200px;height:80px;
+  background:radial-gradient(ellipse,rgba(212,149,42,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.ex-label{
+  position:absolute;top:1rem;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--parch);
+  text-align:center;pointer-events:none;
+  text-shadow:0 0 20px rgba(0,0,0,.8);
+}
+.ex-sublabel{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--silver);margin-top:3px;}
+
+.booth-gallery{
+  display:flex;gap:10px;overflow-x:auto;padding:0 0 .75rem;
+  scrollbar-width:thin;scrollbar-color:var(--gold) transparent;
+}
+.booth-gallery::-webkit-scrollbar{height:3px;}
+.booth-gallery::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
+
+.booth-card{
+  flex:0 0 200px;background:var(--card);
+  border:.5px solid var(--border);border-radius:6px;
+  padding:1rem;cursor:pointer;
+  transition:all .25s;display:flex;flex-direction:column;gap:6px;
+}
+.booth-card:hover{border-color:var(--bordh);transform:translateY(-3px);}
+.booth-flag{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);}
+.booth-org{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:500;color:var(--parch);line-height:1.2;}
+.booth-blurb{font-size:10px;color:var(--silver);line-height:1.45;flex:1;}
+.booth-enter-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border-top:.5px solid var(--border);padding-top:6px;margin-top:2px;}
+
+/* ── LECTURE HALL ── */
+.hall-stage-scene{
+  perspective:700px;
+  height:260px;
+  background:#000;
+  border:.5px solid var(--border);
+  border-radius:6px;
+  position:relative;overflow:hidden;
+  margin-bottom:1rem;
+}
+.hall-floor-3d{
+  position:absolute;width:100%;height:500px;
+  bottom:-80px;left:0;
+  transform:rotateX(60deg);transform-origin:bottom center;
+  background:linear-gradient(rgba(212,149,42,.04) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(212,149,42,.04) 1px,transparent 1px),#080B16;
+  background-size:50px 50px;
+}
+.hall-screen-3d{
+  position:absolute;
+  top:8%;left:50%;
+  transform:translateX(-50%) translateZ(-120px) perspective(700px);
+  width:60%;
+  border:1px solid rgba(212,149,42,.4);
+  border-radius:3px;
+  background:#000;
+  aspect-ratio:16/9;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:6px;
+  box-shadow:0 0 40px rgba(212,149,42,.08);
+}
+.hall-screen-inner{text-align:center;}
+.yt-icon{font-size:2.5rem;color:#FF3333;margin-bottom:6px;display:block;}
+.hall-screen-title{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--parch);margin-bottom:4px;}
+.hall-screen-sub{font-size:10px;color:var(--silver);}
+.watch-btn{margin-top:8px;background:var(--gold);color:var(--obs);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:2px;border:none;cursor:pointer;}
+
+.hall-info-grid{display:grid;grid-template-columns:1fr 2fr;gap:10px;}
+.hall-info-card{background:var(--card);border:.5px solid var(--border);border-radius:6px;padding:1rem 1.25rem;}
+.hic-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.hic-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--parch);margin-bottom:3px;}
+.hic-role{font-size:11px;color:var(--silver);line-height:1.5;}
+.hic-abstract{font-size:12px;color:var(--mist);line-height:1.65;}
+
+/* ── BREAKOUT ROOMS ── */
+.rooms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+.room-card{background:var(--card);border:.5px solid var(--border);border-radius:6px;padding:1.1rem;display:flex;flex-direction:column;gap:7px;cursor:pointer;transition:all .2s;}
+.room-card:hover{border-color:var(--bordh);transform:translateY(-2px);}
+.rc-track{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);}
+.rc-session{font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--parch);line-height:1.3;flex:1;}
+.rc-status{display:flex;align-items:center;gap:5px;font-size:10px;}
+.sd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.sd-live{background:#4ade80;animation:blink 1.4s infinite;}
+.sd-soon{background:var(--gold);}
+.sd-done{background:var(--silver);}
+.rc-join{background:transparent;border:.5px solid var(--border);color:var(--silver);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px;border-radius:2px;cursor:pointer;transition:all .2s;width:100%;}
+.rc-join:hover{border-color:var(--gold);color:var(--gold);}
+.rc-join.live{border-color:rgba(74,222,128,.35);color:#4ade80;}
+
+/* ── NETWORKING ── */
+.net-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+.net-card{background:var(--card);border:.5px solid var(--border);border-radius:6px;padding:1rem;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:all .2s;}
+.net-card:hover{border-color:var(--bordh);}
+.net-avatar{width:38px;height:38px;border-radius:50%;background:var(--indigo);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold);flex-shrink:0;}
+.net-name{font-size:13px;font-weight:500;color:var(--parch);}
+.net-role{font-size:10px;color:var(--silver);margin-top:2px;line-height:1.4;}
+.net-tag{font-size:9px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+
+/* ── POSTERS ── */
+.poster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;}
+.poster-card{background:var(--card);border:.5px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:all .2s;}
+.poster-card:hover{border-color:var(--bordh);transform:translateY(-2px);}
+.poster-thumb{height:72px;background:var(--indigo);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);border-bottom:.5px solid var(--border);}
+.poster-body{padding:.875rem 1rem;}
+.poster-title{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--parch);line-height:1.3;margin-bottom:5px;}
+.poster-author{font-size:10px;color:var(--silver);}
+.poster-topic{font-size:9px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-top:5px;}
+
+/* ── BOOTH MODAL ── */
+#booth-modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(5,6,12,.9);
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);
+}
+#booth-modal-overlay.open{display:flex;}
+.booth-modal{
+  background:rgba(12,16,32,.98);
+  border:.5px solid var(--bordh);border-radius:8px;
+  width:min(580px,92vw);max-height:82vh;
+  overflow-y:auto;position:relative;
+  animation:modal-in .25s cubic-bezier(.22,1,.36,1);
+}
+@keyframes modal-in{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.modal-hdr{padding:1.4rem 1.5rem;border-bottom:.5px solid var(--border);display:flex;align-items:flex-start;gap:1rem;}
+.modal-org{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:400;color:var(--parch);}
+.modal-ctry{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:4px;}
+.modal-x{position:absolute;top:12px;right:14px;background:transparent;border:none;color:var(--silver);cursor:pointer;font-size:20px;line-height:1;transition:color .2s;}
+.modal-x:hover{color:var(--parch);}
+.modal-bdy{padding:1.4rem 1.5rem;}
+.modal-sec{margin-bottom:1.1rem;}
+.modal-sec-lbl{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-weight:500;}
+.modal-sec-txt{font-size:13px;color:var(--mist);line-height:1.7;}
+.modal-acts{display:flex;gap:8px;flex-wrap:wrap;padding-top:.4rem;}
+.modal-act{background:transparent;border:.5px solid var(--border);color:var(--silver);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;border-radius:2px;cursor:pointer;transition:all .2s;}
+.modal-act:hover{border-color:var(--gold);color:var(--gold);}
+.modal-act.primary{border-color:var(--gold);color:var(--gold2);}
+
+/* ── SCHEDULE ── */
+.sched-rows{display:flex;flex-direction:column;gap:3px;}
+.sched-row{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:.75rem;padding:.8rem 1rem;background:var(--card);border-radius:5px;border:.5px solid transparent;cursor:pointer;transition:all .2s;}
+.sched-row:hover{border-color:var(--border);background:#1E2740;}
+.sched-row.now{border-color:var(--bordh);}
+.sched-time{font-size:11px;color:var(--silver);font-weight:500;letter-spacing:.03em;}
+.sched-badge{font-size:9px;letter-spacing:.09em;text-transform:uppercase;background:rgba(212,149,42,.15);color:var(--gold2);padding:2px 6px;border-radius:2px;margin-top:3px;display:inline-block;}
+.sched-title{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--parch);}
+.sched-spkr{font-size:10px;color:var(--silver);margin-top:2px;}
+.sched-room{font-size:10px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;text-align:right;}
+
+/* ── TRANSITION FADE ── */
+#fade-overlay{
+  position:fixed;inset:0;z-index:95;
+  background:var(--obs);
+  pointer-events:none;opacity:0;
+  transition:opacity .35s ease;
+}
+#fade-overlay.fading{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ════════ ENTRANCE ════════ -->
+<div class="screen active" id="screen-entrance">
+  <div class="star-field" id="star-field"></div>
+  <div class="entrance-wrap">
+
+    <svg class="logo-svg" viewBox="0 0 170 170" xmlns="http://www.w3.org/2000/svg" aria-label="SUAPS logo">
+      <defs>
+        <radialGradient id="grd" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#F0B84A" stop-opacity=".9"/>
+          <stop offset="100%" stop-color="#D4952A" stop-opacity=".5"/>
+        </radialGradient>
+      </defs>
+      <g class="ray-group" style="transform-origin:85px 85px">
+        <g class="ray-pulse">
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round"/>
+          <line x1="85" y1="25" x2="85" y2="8"  stroke="#D4952A" stroke-width="1.4" stroke-linecap="round" transform="rotate(8,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(16,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="9"  stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(24,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(32,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(40,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(48,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(56,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(64,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="9"  stroke="#D4952A" stroke-width="1.4" stroke-linecap="round" transform="rotate(72,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(80,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(88,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(96,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(104,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(112,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="9"  stroke="#D4952A" stroke-width="1.4" stroke-linecap="round" transform="rotate(120,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(128,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(136,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(144,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(152,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(160,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="9"  stroke="#D4952A" stroke-width="1.4" stroke-linecap="round" transform="rotate(168,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(176,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(184,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(192,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(200,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(208,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="9"  stroke="#D4952A" stroke-width="1.4" stroke-linecap="round" transform="rotate(216,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(224,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(232,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(240,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(248,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(256,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="9"  stroke="#D4952A" stroke-width="1.4" stroke-linecap="round" transform="rotate(264,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(272,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(280,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(288,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(296,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(304,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="9"  stroke="#D4952A" stroke-width="1.4" stroke-linecap="round" transform="rotate(312,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(320,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(328,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(336,85,85)"/>
+          <line x1="85" y1="26" x2="85" y2="10" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(344,85,85)"/>
+          <line x1="85" y1="25" x2="85" y2="7"  stroke="#D4952A" stroke-width="1.7" stroke-linecap="round" transform="rotate(352,85,85)"/>
+        </g>
+      </g>
+      <g class="void-core" style="transform-origin:85px 85px">
+        <circle cx="85" cy="85" r="46" fill="#07090F" stroke="url(#grd)" stroke-width="1"/>
+        <circle cx="85" cy="85" r="42" fill="none" stroke="#D4952A" stroke-width=".3" opacity=".35"/>
+        <text x="85" y="94" text-anchor="middle" fill="#D4952A" font-family="Cormorant Garamond,serif" font-size="24" font-weight="300">S</text>
+      </g>
+    </svg>
+
+    <div class="ent-eyebrow">Annual Conference · September 18–20, 2026</div>
+    <div class="ent-title">Society for UAP Studies</div>
+    <div class="ent-theme">UAP Studies: Past, Present, and Future</div>
+    <div class="ent-date">Virtual Platform · StreamYard &amp; Google Meet</div>
+    <button class="enter-btn" id="enter-btn">Enter Conference</button>
+    <div class="ent-hint">Click anywhere or press Enter to proceed</div>
+  </div>
+</div>
+
+<!-- ════════ HUD ════════ -->
+<div id="hud">
+  <div class="hud-brand" id="hud-home">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <g transform="translate(13,13)">
+        <line x1="0" y1="-7" x2="0" y2="-11" stroke="#D4952A" stroke-width="1" stroke-linecap="round"/>
+        <line x1="0" y1="-7" x2="0" y2="-10" stroke="#D4952A" stroke-width=".9" stroke-linecap="round" transform="rotate(45)"/>
+        <line x1="0" y1="-7" x2="0" y2="-11" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(90)"/>
+        <line x1="0" y1="-7" x2="0" y2="-10" stroke="#D4952A" stroke-width=".9" stroke-linecap="round" transform="rotate(135)"/>
+        <line x1="0" y1="-7" x2="0" y2="-11" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(180)"/>
+        <line x1="0" y1="-7" x2="0" y2="-10" stroke="#D4952A" stroke-width=".9" stroke-linecap="round" transform="rotate(225)"/>
+        <line x1="0" y1="-7" x2="0" y2="-11" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(270)"/>
+        <line x1="0" y1="-7" x2="0" y2="-10" stroke="#D4952A" stroke-width=".9" stroke-linecap="round" transform="rotate(315)"/>
+        <circle r="5.5" fill="#07090F" stroke="#D4952A" stroke-width=".7"/>
+        <text y="3" text-anchor="middle" fill="#D4952A" font-size="6" font-family="Cormorant Garamond,serif">S</text>
+      </g>
+    </svg>
+    <div class="hud-brand-text">SUAPS · Annual Conference 2026</div>
+  </div>
+  <div class="hud-room" id="hud-room-label">Conference Foyer</div>
+  <div class="hud-right">
+    <div class="live-pill"><div class="live-dot"></div>Live Now</div>
+    <button class="hud-btn" id="hud-join-keynote">Join Keynote →</button>
+  </div>
+</div>
+
+<!-- ════════ FOYER ════════ -->
+<div class="screen" id="screen-foyer" style="padding-top:52px;">
+  <div class="foyer-scene">
+    <div class="corridor">
+      <div class="floor"></div>
+      <div class="ceiling"></div>
+      <div class="wall-left"></div>
+      <div class="wall-right"></div>
+      <div class="wall-back"></div>
+
+      <!-- Ceiling light -->
+      <div class="ceil-strip" style="--cz:-100px;"></div>
+
+      <!-- Vanishing point glow -->
+      <div style="position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) translateZ(-300px);width:300px;height:120px;background:radial-gradient(ellipse,rgba(212,149,42,.08) 0%,transparent 70%);pointer-events:none;"></div>
+
+      <!-- Conference banner -->
+      <div class="foyer-banner">
+        <div class="foyer-banner-rule"></div>
+        <div class="foyer-banner-title">SUAPS Annual Conference 2026</div>
+        <div class="foyer-banner-theme">UAP Studies: Past, Present, and Future</div>
+        <div class="foyer-banner-rule"></div>
+      </div>
+
+      <!-- DOORS -->
+      <!-- Main Lecture Hall — left front -->
+      <div class="door-portal" style="transform:translate(-200px,-95px) translateZ(-180px) rotateY(15deg);" onclick="goTo('hall')">
+        <div class="door-frame">
+          <div class="door-fill"></div>
+          <div class="door-gold-top"></div>
+          <div class="door-gold-bottom"></div>
+          <div class="door-live-badge">● Live</div>
+          <div class="door-icon-3d">▶</div>
+          <div class="door-name">Lecture Hall</div>
+          <div class="door-sub-text">Keynote · YouTube Live</div>
+        </div>
+        <div class="door-label-wrap">Enter Lecture Hall</div>
+      </div>
+
+      <!-- Exhibit Hall — left mid -->
+      <div class="door-portal" style="transform:translate(-140px,-95px) translateZ(-340px) rotateY(8deg);" onclick="goTo('exhibit')">
+        <div class="door-frame">
+          <div class="door-fill"></div>
+          <div class="door-gold-top"></div>
+          <div class="door-gold-bottom"></div>
+          <div class="door-icon-3d">⬛</div>
+          <div class="door-name">Exhibit Hall</div>
+          <div class="door-sub-text">16 Global Orgs</div>
+        </div>
+        <div class="door-label-wrap">Enter Exhibit Hall</div>
+      </div>
+
+      <!-- Center — Schedule -->
+      <div class="door-portal" style="transform:translate(-60px,-95px) translateZ(-460px) rotateY(0deg);" onclick="goTo('schedule')">
+        <div class="door-frame">
+          <div class="door-fill"></div>
+          <div class="door-gold-top"></div>
+          <div class="door-gold-bottom"></div>
+          <div class="door-icon-3d">📅</div>
+          <div class="door-name">Schedule</div>
+          <div class="door-sub-text">Full Programme</div>
+        </div>
+        <div class="door-label-wrap">View Schedule</div>
+      </div>
+
+      <!-- Right mid — Breakout -->
+      <div class="door-portal" style="transform:translate(60px,-95px) translateZ(-340px) rotateY(-8deg);" onclick="goTo('rooms')">
+        <div class="door-frame">
+          <div class="door-fill"></div>
+          <div class="door-gold-top"></div>
+          <div class="door-gold-bottom"></div>
+          <div class="door-icon-3d">◫</div>
+          <div class="door-name">Breakout Rooms</div>
+          <div class="door-sub-text">8 Sessions · Meet</div>
+        </div>
+        <div class="door-label-wrap">Enter Breakout Rooms</div>
+      </div>
+
+      <!-- Right front — Networking -->
+      <div class="door-portal" style="transform:translate(160px,-95px) translateZ(-180px) rotateY(-15deg);" onclick="goTo('network')">
+        <div class="door-frame">
+          <div class="door-fill"></div>
+          <div class="door-gold-top"></div>
+          <div class="door-gold-bottom"></div>
+          <div class="door-icon-3d">◎</div>
+          <div class="door-name">Networking</div>
+          <div class="door-sub-text">142 Scholars</div>
+        </div>
+        <div class="door-label-wrap">Enter Networking Lounge</div>
+      </div>
+
+    </div><!-- /corridor -->
+  </div><!-- /foyer-scene -->
+
+  <!-- Nav bar always visible -->
+  <div class="foyer-nav-bar">
+    <button class="fnav-btn" onclick="goTo('hall')">▶ Lecture Hall</button>
+    <button class="fnav-btn" onclick="goTo('exhibit')">⬛ Exhibit Hall</button>
+    <button class="fnav-btn" onclick="goTo('schedule')">📅 Schedule</button>
+    <button class="fnav-btn" onclick="goTo('rooms')">◫ Breakout Rooms</button>
+    <button class="fnav-btn" onclick="goTo('network')">◎ Networking</button>
+    <button class="fnav-btn" onclick="goTo('posters')">📄 Poster Hall</button>
+  </div>
+</div>
+
+<!-- ════════ EXHIBIT HALL ════════ -->
+<div class="screen room-screen" id="screen-exhibit">
+  <div class="room-top-bar">
+    <button class="back-btn" onclick="goTo('foyer')">← Foyer</button>
+    <div class="room-title-bar">Exhibition Hall — Global UAP Research Organizations</div>
+  </div>
+  <div class="room-content">
+    <div class="exhibit-hall-3d">
+      <div class="exhibit-corridor">
+        <div class="ex-floor-plane"></div>
+        <div class="ex-vp-glow"></div>
+        <div class="ex-label">
+          Exhibition Hall
+          <div class="ex-sublabel">Scroll below to browse all 16 booths · Click to enter</div>
+        </div>
+      </div>
+    </div>
+    <div class="booth-gallery" id="booth-gallery"></div>
+  </div>
+</div>
+
+<!-- ════════ LECTURE HALL ════════ -->
+<div class="screen room-screen" id="screen-hall">
+  <div class="room-top-bar">
+    <button class="back-btn" onclick="goTo('foyer')">← Foyer</button>
+    <div class="room-title-bar">Main Lecture Hall</div>
+    <div style="margin-left:auto;font-size:10px;color:var(--silver);">StreamYard → YouTube Live</div>
+  </div>
+  <div class="room-content">
+    <div class="hall-stage-scene">
+      <div class="hall-floor-3d"></div>
+      <div class="hall-screen-3d">
+        <div class="hall-screen-inner">
+          <span class="yt-icon">▶</span>
+          <div class="hall-screen-title">Opening Keynote: The Empirical Weird</div>
+          <div class="hall-screen-sub">Streaming via StreamYard → YouTube Live</div>
+          <button class="watch-btn">Watch on YouTube →</button>
+        </div>
+      </div>
+    </div>
+    <div class="hall-info-grid">
+      <div class="hall-info-card">
+        <div class="hic-label">Speaker</div>
+        <div class="hic-name">Dr. Michael Cifone</div>
+        <div class="hic-role">Founder &amp; President, SUAPS · PhD Philosophy of Science, University of Maryland</div>
+      </div>
+      <div class="hall-info-card">
+        <div class="hic-label">Abstract</div>
+        <div class="hic-abstract">This keynote introduces the theoretical framework of the "empirical weird" as the central organising concept for UAP studies as a nascent interdisciplinary field — examining how phenomena at the threshold of scientific classifiability demand new epistemological tools drawn from philosophy, physics, anthropology, and the history of science.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ BREAKOUT ROOMS ════════ -->
+<div class="screen room-screen" id="screen-rooms">
+  <div class="room-top-bar">
+    <button class="back-btn" onclick="goTo('foyer')">← Foyer</button>
+    <div class="room-title-bar">Breakout Rooms — Concurrent Sessions</div>
+    <div style="margin-left:auto;font-size:10px;color:var(--silver);">All sessions via Google Meet</div>
+  </div>
+  <div class="room-content">
+    <div class="rooms-grid">
+      <div class="room-card"><div class="rc-track">Room A · Science &amp; Detection</div><div class="rc-session">Aviation Safety and Anomalous Phenomena: Thirty Years of NARCAP Data</div><div class="rc-status"><div class="sd sd-live"></div><span style="color:#4ade80;">Live · 47 attendees</span></div><button class="rc-join live">Join Google Meet →</button></div>
+      <div class="room-card"><div class="rc-track">Room B · Science &amp; Detection</div><div class="rc-session">Project Hessdalen: Monitoring Persistent Luminous Phenomena in Norway</div><div class="rc-status"><div class="sd sd-live"></div><span style="color:#4ade80;">Live · 31 attendees</span></div><button class="rc-join live">Join Google Meet →</button></div>
+      <div class="room-card"><div class="rc-track">Room C · Policy &amp; Governance</div><div class="rc-session">Japan's UAP Parliamentary League: Transparency and Scientific Mandate</div><div class="rc-status"><div class="sd sd-soon"></div><span style="color:var(--gold);">Starts 3:30 PM ET</span></div><button class="rc-join">Open Room</button></div>
+      <div class="room-card"><div class="rc-track">Room D · Policy &amp; Governance</div><div class="rc-session">European Parliament and UAP: EASA Reporting Gaps and Coalition's Call to Action</div><div class="rc-status"><div class="sd sd-soon"></div><span style="color:var(--gold);">Starts 4:00 PM ET</span></div><button class="rc-join">Open Room</button></div>
+      <div class="room-card"><div class="rc-track">Room E · History &amp; Archives</div><div class="rc-session">CUFOS at Fifty: From Hynek's Index Cards to Global Research Infrastructure</div><div class="rc-status"><div class="sd sd-soon"></div><span style="color:var(--gold);">Starts 5:00 PM ET</span></div><button class="rc-join">Open Room</button></div>
+      <div class="room-card"><div class="rc-track">Room F · History &amp; Archives</div><div class="rc-session">The CUCO Project: Statistical Analysis of Six Decades of Spanish UAP Data</div><div class="rc-status"><div class="sd sd-done"></div><span style="color:var(--silver);">Recording available</span></div><button class="rc-join">Watch Recording</button></div>
+      <div class="room-card"><div class="rc-track">Room G · Philosophy &amp; Theory</div><div class="rc-session">What Counts as Evidence? Epistemological Challenges in UAP Studies</div><div class="rc-status"><div class="sd sd-done"></div><span style="color:var(--silver);">Recording available</span></div><button class="rc-join">Watch Recording</button></div>
+      <div class="room-card"><div class="rc-track">Room H · Open Roundtable</div><div class="rc-session">Scholar Roundtable: Building Institutional Infrastructure for UAP Studies</div><div class="rc-status"><div class="sd sd-live"></div><span style="color:#4ade80;">Live · 62 attendees</span></div><button class="rc-join live">Join Google Meet →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SCHEDULE ════════ -->
+<div class="screen room-screen" id="screen-schedule">
+  <div class="room-top-bar">
+    <button class="back-btn" onclick="goTo('foyer')">← Foyer</button>
+    <div class="room-title-bar">Schedule &amp; Agenda — September 18–20, 2026</div>
+  </div>
+  <div class="room-content">
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;">
+      <button class="fnav-btn" style="border-color:var(--gold);color:var(--gold2);">Day 1 — Sept 18</button>
+      <button class="fnav-btn">Day 2 — Sept 19</button>
+      <button class="fnav-btn">Day 3 — Sept 20</button>
+    </div>
+    <div class="sched-rows">
+      <div class="sched-row now"><div><div class="sched-time">9:00 AM</div><div class="sched-badge">Live Now</div></div><div><div class="sched-title">Opening Keynote: The Empirical Weird and the Future of UAP Studies</div><div class="sched-spkr">Dr. Michael Cifone · SUAPS</div></div><div class="sched-room">Main Hall</div></div>
+      <div class="sched-row"><div><div class="sched-time">10:30 AM</div></div><div><div class="sched-title">Six Decades of French UAP Data: Statistical Patterns and Spatial Clustering</div><div class="sched-spkr">Michael Vaillant · GEIPAN / SUAPS</div></div><div class="sched-room">Main Hall</div></div>
+      <div class="sched-row"><div><div class="sched-time">12:00 PM</div></div><div><div class="sched-title">Aviation Safety and Anomalous Phenomena: Thirty Years of NARCAP Data</div><div class="sched-spkr">Ted Roe · NARCAP</div></div><div class="sched-room">Room A</div></div>
+      <div class="sched-row"><div><div class="sched-time">12:00 PM</div></div><div><div class="sched-title">Project Hessdalen: Continuous Scientific Monitoring of Persistent Luminous Phenomena</div><div class="sched-spkr">Massimo Teodorani · Project Hessdalen</div></div><div class="sched-room">Room B</div></div>
+      <div class="sched-row"><div><div class="sched-time">2:00 PM</div></div><div><div class="sched-title">Galileo Project: Observatory Networks and the Search for Anomalous Objects</div><div class="sched-spkr">Prof. Avi Loeb · Harvard / Galileo Project</div></div><div class="sched-room">Main Hall</div></div>
+      <div class="sched-row"><div><div class="sched-time">3:30 PM</div></div><div><div class="sched-title">Japan's Parliamentary UAP Caucus: National Security and Scientific Mandate</div><div class="sched-spkr">Invited Speaker · Diet UAP Caucus</div></div><div class="sched-room">Room C</div></div>
+      <div class="sched-row"><div><div class="sched-time">5:00 PM</div></div><div><div class="sched-title">Historical Archives and the UFO Record: CUFOS at Fifty Years</div><div class="sched-spkr">Mark Rodeghier · CUFOS</div></div><div class="sched-room">Room E</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ NETWORKING ════════ -->
+<div class="screen room-screen" id="screen-network">
+  <div class="room-top-bar">
+    <button class="back-btn" onclick="goTo('foyer')">← Foyer</button>
+    <div class="room-title-bar">Networking Lounge · 142 Registered Scholars</div>
+  </div>
+  <div class="room-content">
+    <div style="margin-bottom:1rem;"><input type="text" placeholder="Search by name, institution, or research area…" style="width:100%;background:var(--card);border:.5px solid var(--border);color:var(--parch);padding:10px 14px;border-radius:5px;font-size:13px;outline:none;"></div>
+    <div class="net-grid">
+      <div class="net-card"><div class="net-avatar">MC</div><div><div class="net-name">Dr. Michael Cifone</div><div class="net-role">Founder &amp; President, SUAPS · Philosophy of Science</div><div class="net-tag">Empirical Weird · Epistemology</div></div></div>
+      <div class="net-card"><div class="net-avatar">MV</div><div><div class="net-name">Michael Vaillant</div><div class="net-role">Data Scientist · GEIPAN / UAP Check / SUAPS</div><div class="net-tag">Spatial Statistics · UAP Databases</div></div></div>
+      <div class="net-card"><div class="net-avatar">TR</div><div><div class="net-name">Ted Roe</div><div class="net-role">Executive Director · NARCAP</div><div class="net-tag">Aviation Safety · UAP Incidents</div></div></div>
+      <div class="net-card"><div class="net-avatar">ER</div><div><div class="net-name">Edoardo Russo</div><div class="net-role">Director · CISU / EuroUfo Network</div><div class="net-tag">Italian UAP · Historical Archives</div></div></div>
+      <div class="net-card"><div class="net-avatar">MR</div><div><div class="net-name">Mark Rodeghier</div><div class="net-role">Scientific Director · CUFOS</div><div class="net-tag">Case Analysis · Scientific Method</div></div></div>
+      <div class="net-card"><div class="net-avatar">BV</div><div><div class="net-name">Beatriz Villarroel</div><div class="net-role">Astrophysicist · KTH / Nordita, Stockholm</div><div class="net-tag">Vanishing Stars · Astronomical UAP</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ POSTER HALL ════════ -->
+<div class="screen room-screen" id="screen-posters">
+  <div class="room-top-bar">
+    <button class="back-btn" onclick="goTo('foyer')">← Foyer</button>
+    <div class="room-title-bar">Poster Hall · 34 Peer-Reviewed Research Abstracts</div>
+  </div>
+  <div class="room-content">
+    <div class="poster-grid">
+      <div class="poster-card"><div class="poster-thumb">σ</div><div class="poster-body"><div class="poster-title">Spatial Clustering of UAP Reports near Nuclear Facilities: A Quantitative Re-Analysis</div><div class="poster-author">Laurent, Thomas-Agnan &amp; Vaillant</div><div class="poster-topic">Physics &amp; Detection</div></div></div>
+      <div class="poster-card"><div class="poster-thumb">∞</div><div class="poster-body"><div class="poster-title">The Phenomenology of the Encounter: Perception, Testimony, and Scientific Evidence</div><div class="poster-author">Cifone, M. · SUAPS</div><div class="poster-topic">Philosophy</div></div></div>
+      <div class="poster-card"><div class="poster-thumb">⊕</div><div class="poster-body"><div class="poster-title">Vanishing Stars as Proxies for Anomalous Phenomena: Methodological Considerations</div><div class="poster-author">Villarroel, B. · KTH Stockholm</div><div class="poster-topic">Physics &amp; Detection</div></div></div>
+      <div class="poster-card"><div class="poster-thumb">Δ</div><div class="poster-body"><div class="poster-title">Patterns of UAP Activity 1945–1975: Nuclear Sites, Nighttime Bias, and Behavioral Signatures</div><div class="poster-author">Scientific Coalition for UAP Studies</div><div class="poster-topic">History &amp; Archives</div></div></div>
+      <div class="poster-card"><div class="poster-thumb">π</div><div class="poster-body"><div class="poster-title">UAP Studies and Library Science: Closing the Information Gap through iField Methodology</div><div class="poster-author">Stahlman, G. · Florida State University</div><div class="poster-topic">Social Science</div></div></div>
+      <div class="poster-card"><div class="poster-thumb">λ</div><div class="poster-body"><div class="poster-title">CUCO Project: First Statistical Results from 25 Years of Spanish UAP Catalogue Integration</div><div class="poster-author">Spanish Ufological Research Community</div><div class="poster-topic">History &amp; Archives</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ BOOTH MODAL ════════ -->
+<div id="booth-modal-overlay">
+  <div class="booth-modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="modal-hdr">
+      <svg width="52" height="52" viewBox="0 0 52 52" aria-hidden="true">
+        <g transform="translate(26,26)">
+          <line x1="0" y1="-13" x2="0" y2="-20" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="0" y1="-13" x2="0" y2="-19" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(30)"/>
+          <line x1="0" y1="-13" x2="0" y2="-20" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(60)"/>
+          <line x1="0" y1="-13" x2="0" y2="-19" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(90)"/>
+          <line x1="0" y1="-13" x2="0" y2="-20" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(120)"/>
+          <line x1="0" y1="-13" x2="0" y2="-19" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(150)"/>
+          <line x1="0" y1="-13" x2="0" y2="-20" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(180)"/>
+          <line x1="0" y1="-13" x2="0" y2="-19" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(210)"/>
+          <line x1="0" y1="-13" x2="0" y2="-20" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(240)"/>
+          <line x1="0" y1="-13" x2="0" y2="-19" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(270)"/>
+          <line x1="0" y1="-13" x2="0" y2="-20" stroke="#D4952A" stroke-width="1.2" stroke-linecap="round" transform="rotate(300)"/>
+          <line x1="0" y1="-13" x2="0" y2="-19" stroke="#D4952A" stroke-width="1" stroke-linecap="round" transform="rotate(330)"/>
+          <circle r="11" fill="#07090F" stroke="#D4952A" stroke-width=".8"/>
+        </g>
+      </svg>
+      <div>
+        <div class="modal-org" id="m-org"></div>
+        <div class="modal-ctry" id="m-ctry"></div>
+      </div>
+    </div>
+    <div class="modal-bdy">
+      <div class="modal-sec"><div class="modal-sec-lbl">About</div><div class="modal-sec-txt" id="m-about"></div></div>
+      <div class="modal-sec"><div class="modal-sec-lbl">Director / Leadership</div><div class="modal-sec-txt" id="m-director"></div></div>
+      <div class="modal-sec"><div class="modal-sec-lbl">Current Research Focus</div><div class="modal-sec-txt" id="m-research"></div></div>
+      <div class="modal-acts" id="m-acts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ FADE OVERLAY ════════ -->
+<div id="fade-overlay"></div>
+
+<script>
+// ── STAR FIELD ──
+(function(){
+  const sf = document.getElementById('star-field');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*2+0.5;
+    s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${-Math.random()*4}s;--max:${0.4+Math.random()*0.7};`;
+    sf.appendChild(s);
+  }
+})();
+
+// ── BOOTH DATA ──
+const BOOTHS=[
+  {org:"GEIPAN",flag:"🇫🇷",country:"France — CNES, Toulouse",blurb:"France's official government UAP investigation unit since 1977",director:"Unit of the Centre National d'Études Spatiales (CNES), Toulouse",about:"GEIPAN is the world's oldest active state-funded UAP investigation unit, operating continuously since 1977 under France's space agency CNES. It maintains the world's first public institutional UAP database and has archived over 3,000 cases.",research:"Statistical spatial analysis of six decades of French UAP reports; automated identification software; FRIPON fireball detection network; quantitative co-variable analysis demonstrating clustering near nuclear-risk facilities.",links:["Visit GEIPAN","View Case Archive","Watch Presentation"]},
+  {org:"Galileo Project",flag:"🇺🇸",country:"United States — Harvard University",blurb:"Harvard observatory network for systematic UAP detection and analysis",director:"Prof. Avi Loeb — Department of Astronomy, Harvard University",about:"Founded in 2021 by astrophysicist Avi Loeb, the Galileo Project deploys multi-sensor observatory systems — optical, infrared, and radio — to collect rigorous empirical data on UAP and anomalous interstellar objects.",research:"Anomalous interstellar object analysis; AI-assisted continuous sky monitoring; multi-modal sensor fusion for UAP detection and classification at scale.",links:["Visit Galileo Project","View Publications","Watch Presentation"]},
+  {org:"SCU",flag:"🇺🇸",country:"United States — Scientific Coalition for UAP Studies",blurb:"Multidisciplinary scientific coalition applying peer-review standards to UAP",director:"Board of Directors — explorescu.org",about:"The SCU brings together scientists, former military personnel, and professionals committed to applying rigorous scientific principles and peer-reviewed standards to the global study of UAP.",research:"Pattern analysis of UAP sightings near nuclear facilities 1945–1975; UAP behavioral signatures across historical data; quantitative case reconstruction methodology.",links:["Visit SCU","View Journal","Watch Presentation"]},
+  {org:"NARCAP",flag:"🇺🇸",country:"United States — National Aviation Reporting Center",blurb:"Aviation safety and UAP incident documentation since 1999",director:"Ted Roe — Executive Director, NARCAP",about:"Founded in 1999 to investigate aviation-safety related UAP encounters, NARCAP operates with ~50 international specialists. International Technical Specialist Dominique Weinstein has compiled 1,300+ international aviation UAP incidents.",research:"Thirty years of aviation UAP incident data; pilot testimony protocols; international case compilation; US/French joint investigation methodology.",links:["Visit NARCAP","View Reports","Watch Presentation"]},
+  {org:"CUFOS",flag:"🇺🇸",country:"United States — Center for UFO Studies",blurb:"Founded by J. Allen Hynek — five decades of scientific investigation",director:"Mark Rodeghier — Scientific Director, CUFOS, Chicago",about:"Founded in 1973 by astronomer J. Allen Hynek, CUFOS is the pre-eminent scientific archive and investigative body in UFO/UAP research, maintaining five decades of case analysis and archival stewardship.",research:"Historical case analysis; UFO wave pattern research; annual review publication; physical trace case database; archive digitisation.",links:["Visit CUFOS","View Archives","Watch Presentation"]},
+  {org:"NUFOHRC",flag:"🇺🇸",country:"United States — National UFO Historical Records Center",blurb:"The archival memory of seventy years of UFO documentation",director:"NUFOHRC Board — nufohrc.org",about:"Dedicated to collecting, preserving, and providing public and researcher access to historical UFO materials across seven decades of documentation.",research:"Historical document preservation; archive digitisation; public access infrastructure for academic and independent UAP research communities.",links:["Visit NUFOHRC","View Archive","Watch Presentation"]},
+  {org:"UAP Check",flag:"🇫🇷",country:"France / International Network (20+ countries)",blurb:"Data-science network uniting 20 national UAP organizations globally",director:"Michael Vaillant — Founder, Former GEIPAN Data Scientist; SUAPS Research Associate",about:"Founded by Michael Vaillant (former GEIPAN), UAP Check connects scientifically oriented UAP organizations across 20+ countries. It coordinated the historic 2024 European Parliament UAP meeting.",research:"International UAP data sharing frameworks; stigma reduction; EuroUfo cross-national statistical collaboration; Science of the Unknown institutional development.",links:["Visit UAP Check","View Network","Watch Presentation"]},
+  {org:"Project Hessdalen",flag:"🇳🇴",country:"Norway — Østerdalen Valley Field Station",blurb:"Long-running field station monitoring recurring luminous aerial phenomena",director:"Massimo Teodorani — Scientific Lead, Astrophysicist",about:"Since the 1980s, the Hessdalen Valley in central Norway has hosted one of the most documented UAP cases in history — recurring luminous phenomena attracting decades of scientific monitoring.",research:"Continuous electromagnetic and optical monitoring; plasma physics hypotheses; sustained multi-decade longitudinal data collection.",links:["Visit Hessdalen","View Field Data","Watch Presentation"]},
+  {org:"CISU",flag:"🇮🇹",country:"Italy — Centro Italiano Studi Ufologici",blurb:"Italy's foremost UAP research institution, founded 1985",director:"Edoardo Russo — Director, CISU / EuroUfo Network",about:"CISU has maintained forty years of case investigation and peer engagement. It publishes UPIAR — the first and longest-running scientific UFO periodical — and participated in the landmark 20-nation European data sharing initiative.",research:"Italian national UAP catalogue; UPIAR scientific periodical; EuroUfo cross-border data integration; forty years of standardized case investigation.",links:["Visit CISU","View UPIAR","Watch Presentation"]},
+  {org:"NARCAP Germany / JMU Würzburg",flag:"🇩🇪",country:"Germany",blurb:"German UAP research combining aviation safety with university science",director:"Julius-Maximilians-Universität Würzburg — Partner Institution",about:"Germany's UAP research ecosystem includes NARCAP Germany responding to EU pilot UAP incidents, alongside active academic research at JMU Würzburg — contributors to the 2025 Progress in Aerospace Sciences UAP review.",research:"German pilot UAP incident documentation; aerospace science methodology; EU airspace safety analysis; contribution to international UAP review literature.",links:["Visit NARCAP-DE","View Research","Watch Presentation"]},
+  {org:"AFU / Lund UAP Group",flag:"🇸🇪",country:"Sweden — Norrköping / Lund University",blurb:"Scandinavia's premier UAP archive and emerging university study group",director:"AFU Sweden — Norrköping; Lund University emerging research group",about:"The Archives for the Unexplained (AFU) is one of the world's largest physical UAP research archives. Alongside AFU, a Lund University study group has emerged as one of Scandinavia's most respected scholarly communities for UAP inquiry.",research:"Historical archive preservation; Scandinavian UAP case documentation; interdisciplinary academic UAP inquiry.",links:["Visit AFU","View Archive","Watch Presentation"]},
+  {org:"UAP Coalition Netherlands",flag:"🇳🇱",country:"Netherlands",blurb:"Coordinated the landmark 2024 European Parliament UAP meeting",director:"André Jol — Coordinator, UAP Coalition Netherlands",about:"The UAP Coalition Netherlands spearheaded the historic March 2024 European Parliament meeting on UAP and coordinated the joint letter signed by 15 national UAP organizations calling for a common EU reporting framework.",research:"EU airspace safety and UAP policy advocacy; Dutch Safety Board UAP pilot reporting coordination; European institutional engagement.",links:["Visit UAP Coalition NL","View EP Meeting","Watch Presentation"]},
+  {org:"Japan Diet UAP Caucus",flag:"🇯🇵",country:"Japan — National Diet",blurb:"90-member parliamentary group pushing for Japan's first UAP ministry division",director:"Yasukazu Hamada (Chair) — Former Defence Minister; Shinjiro Koizumi (Secretary-General)",about:"Established June 2024, Japan's Parliamentary League for Clarifying UAP is a 90-member bipartisan caucus. In May 2025 they formally proposed to the Ministry of Defence the creation of Japan's first dedicated UAP investigation division.",research:"National security implications of East Asia UAP hotspot; UAP data collection and public disclosure policy; Japan-US UAP information sharing.",links:["View Caucus","View Statement","Watch Presentation"]},
+  {org:"CUCO Project",flag:"🇪🇸",country:"Spain",blurb:"25 years of Spanish UAP catalogue integration and statistical analysis",director:"Spanish Ufological Research Community",about:"The Comprehensive UFO Cases Overview Project has spent 25 years compiling Spanish UAP catalogues, culminating in the first statistical results published in the Revista de Ufología.",research:"25-year longitudinal catalogue integration; first statistical publication in Revista de Ufología No. 9; Spanish national case statistics.",links:["View CUCO Project","View Publication","Watch Presentation"]},
+  {org:"3AF-SIGMA2",flag:"🌐",country:"France / International",blurb:"Aerospace engineering society applying rigorous science to UAP investigation",director:"Association Aéronautique et Astronautique de France — SIGMA2 Commission",about:"SIGMA2 is the UAP scientific commission of 3AF, bringing professional aeronautical and astronautical engineering expertise to systematic UAP investigation and technical case analysis.",research:"Aerospace engineering methodology for UAP investigation; photographic and radar evidence analysis; IPACO digital analysis tool; technical report publication.",links:["Visit 3AF-SIGMA2","View Reports","Watch Presentation"]},
+  {org:"AIAA UAP COI",flag:"🌐",country:"International — AIAA",blurb:"Bridging the aerospace profession and the emerging science of UAP",director:"AIAA UAP Integration & Outreach Committee — aiaa.org",about:"The AIAA's UAP Community of Interest brings America's most prestigious aerospace engineering institution into formal engagement with UAP studies, organizing peer exchange and professional outreach.",research:"Technical standards for UAP reporting in aviation; integration of aerospace science methodology into civilian UAP research.",links:["Visit AIAA UAP COI","View Publications","Watch Presentation"]}
+];
+
+// ── BUILD BOOTH GALLERY ──
+(function(){
+  const g=document.getElementById('booth-gallery');
+  BOOTHS.forEach((b,i)=>{
+    const c=document.createElement('div');
+    c.className='booth-card';
+    c.innerHTML=`<div class="booth-flag">${b.flag} ${b.country}</div><div class="booth-org">${b.org}</div><div class="booth-blurb">${b.blurb}</div><div class="booth-enter-lbl">Enter booth →</div>`;
+    c.addEventListener('click',()=>openBooth(i));
+    g.appendChild(c);
+  });
+})();
+
+// ── NAVIGATION ──
+let current='entrance';
+
+function goTo(id){
+  const fade=document.getElementById('fade-overlay');
+  fade.classList.add('fading');
+  setTimeout(()=>{
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const target=document.getElementById('screen-'+id);
+    if(target) target.classList.add('active');
+    current=id;
+    const hud=document.getElementById('hud');
+    hud.classList.toggle('show', id!=='entrance');
+    const labels={foyer:'Conference Foyer',hall:'Main Lecture Hall',exhibit:'Exhibition Hall',rooms:'Breakout Rooms',schedule:'Schedule & Agenda',network:'Networking Lounge',posters:'Poster Hall'};
+    const lbl=document.getElementById('hud-room-label');
+    if(lbl) lbl.textContent=labels[id]||'';
+    // Scroll room content to top
+    const rc=target&&target.querySelector('.room-content');
+    if(rc) rc.scrollTop=0;
+    fade.classList.remove('fading');
+  },320);
+}
+
+// ── ENTER BUTTON ──
+function doEnter(e){
+  if(e) e.stopPropagation();
+  goTo('foyer');
+}
+
+document.getElementById('enter-btn').addEventListener('click', doEnter);
+document.getElementById('screen-entrance').addEventListener('click', doEnter);
+document.addEventListener('keydown', e=>{
+  if(current==='entrance' && (e.key==='Enter'||e.key===' ')) doEnter();
+});
+
+// HUD buttons
+document.getElementById('hud-home').addEventListener('click', ()=>goTo('foyer'));
+document.getElementById('hud-join-keynote').addEventListener('click', ()=>goTo('hall'));
+
+// ESC returns to foyer
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && current!=='entrance' && current!=='foyer'){
+    if(document.getElementById('booth-modal-overlay').classList.contains('open')){
+      closeModal();
+    } else {
+      goTo('foyer');
+    }
+  }
+});
+
+// ── BOOTH MODAL ──
+function openBooth(i){
+  const b=BOOTHS[i];
+  document.getElementById('m-org').textContent=b.org;
+  document.getElementById('m-ctry').textContent=`${b.flag} ${b.country}`;
+  document.getElementById('m-about').textContent=b.about;
+  document.getElementById('m-director').textContent=b.director;
+  document.getElementById('m-research').textContent=b.research;
+  const acts=document.getElementById('m-acts');
+  acts.innerHTML='';
+  b.links.forEach((l,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='modal-act'+(idx===0?' primary':'');
+    btn.textContent=l;
+    acts.appendChild(btn);
+  });
+  document.getElementById('booth-modal-overlay').classList.add('open');
+}
+
+function closeModal(e){
+  if(!e||e.target===document.getElementById('booth-modal-overlay')){
+    document.getElementById('booth-modal-overlay').classList.remove('open');
+  }
+}
+document.getElementById('booth-modal-overlay').addEventListener('click', closeModal);
+</script>
+
+
+<script>
+/* GitHub Pages navigation failsafe. This runs in a separate script block so it still
+   executes even if the earlier conference-platform script fails to initialize. */
+(function(){
+  function ready(fn){
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', fn, {once:true});
+    } else {
+      fn();
+    }
+  }
+
+  ready(function(){
+    const labels = {
+      foyer:'Conference Foyer',
+      hall:'Main Lecture Hall',
+      exhibit:'Exhibition Hall',
+      rooms:'Breakout Rooms',
+      schedule:'Schedule & Agenda',
+      network:'Networking Lounge',
+      posters:'Poster Hall'
+    };
+
+    function showScreen(id){
+      const target = document.getElementById('screen-' + id);
+      if(!target){ return; }
+
+      document.querySelectorAll('.screen').forEach(function(screen){
+        screen.classList.remove('active');
+      });
+      target.classList.add('active');
+
+      const hud = document.getElementById('hud');
+      if(hud){ hud.classList.toggle('show', id !== 'entrance'); }
+
+      const roomLabel = document.getElementById('hud-room-label');
+      if(roomLabel){ roomLabel.textContent = labels[id] || ''; }
+
+      const roomContent = target.querySelector('.room-content');
+      if(roomContent){ roomContent.scrollTop = 0; }
+
+      window.__suapsCurrentScreen = id;
+    }
+
+    function goToSafe(id){
+      const fade = document.getElementById('fade-overlay');
+      if(fade){
+        fade.classList.add('fading');
+        window.setTimeout(function(){
+          showScreen(id);
+          fade.classList.remove('fading');
+        }, 180);
+      } else {
+        showScreen(id);
+      }
+    }
+
+    // Make inline onclick handlers and console diagnostics dependable.
+    window.goTo = goToSafe;
+
+    function bindClick(selector, id){
+      document.querySelectorAll(selector).forEach(function(el){
+        if(el.tagName === 'BUTTON'){ el.setAttribute('type', 'button'); }
+        el.addEventListener('click', function(event){
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          goToSafe(id);
+        }, true);
+      });
+    }
+
+    bindClick('#enter-btn', 'foyer');
+    bindClick('#screen-entrance', 'foyer');
+    bindClick('#hud-home', 'foyer');
+    bindClick('#hud-join-keynote', 'hall');
+    bindClick('.back-btn', 'foyer');
+
+    const doorTargets = ['hall', 'exhibit', 'schedule', 'rooms', 'network'];
+    document.querySelectorAll('.door-portal').forEach(function(el, index){
+      const id = doorTargets[index];
+      if(!id){ return; }
+      el.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        goToSafe(id);
+      }, true);
+    });
+
+    const foyerNavTargets = ['hall', 'exhibit', 'schedule', 'rooms', 'network', 'posters'];
+    document.querySelectorAll('.foyer-nav-bar .fnav-btn').forEach(function(el, index){
+      const id = foyerNavTargets[index];
+      if(!id){ return; }
+      el.setAttribute('type', 'button');
+      el.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        goToSafe(id);
+      }, true);
+    });
+
+    window.closeModal = window.closeModal || function(){
+      const overlay = document.getElementById('booth-modal-overlay');
+      if(overlay){ overlay.classList.remove('open'); }
+    };
+
+    const modalOverlay = document.getElementById('booth-modal-overlay');
+    if(modalOverlay){
+      modalOverlay.addEventListener('click', function(event){
+        if(event.target === modalOverlay){ modalOverlay.classList.remove('open'); }
+      }, true);
+    }
+
+    document.addEventListener('keydown', function(event){
+      const active = (document.querySelector('.screen.active') || {}).id;
+      const current = active ? active.replace('screen-', '') : (window.__suapsCurrentScreen || 'entrance');
+
+      if(current === 'entrance' && (event.key === 'Enter' || event.key === ' ')){
+        event.preventDefault();
+        goToSafe('foyer');
+      }
+
+      if(event.key === 'Escape' && current !== 'entrance' && current !== 'foyer'){
+        const modal = document.getElementById('booth-modal-overlay');
+        if(modal && modal.classList.contains('open')){
+          modal.classList.remove('open');
+        } else {
+          goToSafe('foyer');
+        }
+      }
+    }, true);
+  });
+})();
+</script>
+
+</body>
+</html>
